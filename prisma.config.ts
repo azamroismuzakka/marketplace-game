@@ -7,8 +7,11 @@ export default defineConfig({
   schema: "prisma/schema.prisma",
   migrations: {
     path: "prisma/migrations",
+    seed: "tsx prisma/seed.ts",
   },
   datasource: {
-    url: process.env["DATABASE_URL"],
+    // Migrasi & introspeksi memakai koneksi DIRECT (session-mode, port 5432).
+    // Koneksi pooled (pgbouncer) tidak cocok untuk migrasi.
+    url: process.env["DIRECT_URL"],
   },
 });

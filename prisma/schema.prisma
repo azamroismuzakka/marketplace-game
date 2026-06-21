@@ -1,7 +1,5 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
+// Prisma schema — AthenaMarket (marketplace jual beli akun game)
+// Docs: https://pris.ly/d/prisma-schema
 
 generator client {
   provider = "prisma-client"
@@ -10,4 +8,199 @@ generator client {
 
 datasource db {
   provider = "postgresql"
+  // Prisma 7: connection URL didefinisikan di prisma.config.ts (bukan di sini).
+  // Runtime client memakai driver adapter (lihat app/lib/prisma.ts).
+}
+
+// ============================ Enums ============================
+
+enum Role {
+  BUYER
+  ADMIN
+}
+
+enum ListingStatus {
+  DRAFT // disimpan penjual, belum diajukan
+  PENDING_REVIEW // menunggu verifikasi admin
+  ACTIVE // tayang di katalog
+  SOLD // sudah terjual
+  REJECTED // ditolak admin
+  INACTIVE // dinonaktifkan
+}
+
+enum OrderStatus {
+  PENDING // dibuat, menunggu pembayaran
+  PAID // sudah dibayar, dana di escrow
+  IN_ESCROW // serah terima akun sedang berlangsung
+  COMPLETED // selesai, dana diteruskan ke penjual
+  CANCELLED // dibatalkan
+  REFUNDED // dana dikembalikan ke pembeli
+  DISPUTED // dalam sengketa
+}
+
+enum PaymentMethod {
+  QRIS
+  VIRTUAL_ACCOUNT
+  EWALLET
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCESS
+  FAILED
+  REFUNDED
+}
+
+// ============================ Models ============================
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  name         String
+  phone        String?
+  avatarUrl    String?
+  role         Role     @default(BUYER)
+  isVerified   Boolean  @default(false)
+  balance      Decimal  @default(0) @db.Decimal(12, 2)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  listings        Listing[]  @relation("SellerListings")
+  orders          Order[]    @relation("BuyerOrders")
+  favorites       Favorite[]
+  reviewsWritten  Review[]   @relation("ReviewAuthor")
+  reviewsReceived Review[]   @relation("ReviewSeller")
+
+  @@index([role])
+  @@map("users")
+}
+
+model Game {
+  id        String   @id @default(cuid())
+  name      String
+  slug      String   @unique
+  iconUrl   String?
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+
+  listings Listing[]
+
+  @@map("games")
+}
+
+model Listing {
+  id          String        @id @default(cuid())
+  sellerId    String
+  gameId      String
+  title       String
+  description String
+  price       Decimal       @db.Decimal(12, 2)
+  rank        String?
+  level       Int?
+  skinCount   Int           @default(0)
+  winRate     Float?
+  iconEmoji   String? // emoji ikon untuk tampilan kartu
+  status      ListingStatus @default(PENDING_REVIEW)
+  isFeatured  Boolean       @default(false)
+  // Kredensial akun (login). Di produksi WAJIB dienkripsi & hanya dirilis
+  // setelah order selesai. Disimpan terpisah dari data publik.
+  credentials String?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  seller    User           @relation("SellerListings", fields: [sellerId], references: [id], onDelete: Cascade)
+  game      Game           @relation(fields: [gameId], references: [id])
+  images    ListingImage[]
+  orders    Order[]
+  favorites Favorite[]
+  reviews   Review[]
+
+  @@index([sellerId])
+  @@index([gameId])
+  @@index([status])
+  @@map("listings")
+}
+
+model ListingImage {
+  id        String @id @default(cuid())
+  listingId String
+  url       String
+  sortOrder Int    @default(0)
+
+  listing Listing @relation(fields: [listingId], references: [id], onDelete: Cascade)
+
+  @@index([listingId])
+  @@map("listing_images")
+}
+
+model Order {
+  id          String      @id @default(cuid())
+  buyerId     String
+  listingId   String
+  amount      Decimal     @db.Decimal(12, 2) // harga akun saat checkout
+  adminFee    Decimal     @default(0) @db.Decimal(12, 2)
+  total       Decimal     @db.Decimal(12, 2)
+  status      OrderStatus @default(PENDING)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  completedAt DateTime?
+
+  buyer   User     @relation("BuyerOrders", fields: [buyerId], references: [id])
+  listing Listing  @relation(fields: [listingId], references: [id])
+  payment Payment?
+  review  Review?
+
+  @@index([buyerId])
+  @@index([listingId])
+  @@index([status])
+  @@map("orders")
+}
+
+model Payment {
+  id        String        @id @default(cuid())
+  orderId   String        @unique
+  method    PaymentMethod
+  status    PaymentStatus @default(PENDING)
+  reference String? // referensi dari payment gateway
+  paidAt    DateTime?
+  createdAt DateTime      @default(now())
+
+  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@map("payments")
+}
+
+model Review {
+  id        String   @id @default(cuid())
+  orderId   String   @unique
+  authorId  String // pembeli yang menulis ulasan
+  sellerId  String // penjual yang diulas (untuk agregasi rating)
+  listingId String
+  rating    Int // 1..5
+  comment   String?
+  createdAt DateTime @default(now())
+
+  order   Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  author  User    @relation("ReviewAuthor", fields: [authorId], references: [id])
+  seller  User    @relation("ReviewSeller", fields: [sellerId], references: [id])
+  listing Listing @relation(fields: [listingId], references: [id])
+
+  @@index([sellerId])
+  @@index([listingId])
+  @@map("reviews")
+}
+
+model Favorite {
+  id        String   @id @default(cuid())
+  userId    String
+  listingId String
+  createdAt DateTime @default(now())
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  listing Listing @relation(fields: [listingId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, listingId])
+  @@index([listingId])
+  @@map("favorites")
 }

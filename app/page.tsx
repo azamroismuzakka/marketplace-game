@@ -1,198 +1,328 @@
 import Link from "next/link";
-import AnimeHero from "./components/AnimeHero";
-import { featuredStats, gameAccounts } from "./lib/mock-data";
+import AccountCard from "./components/AccountCard";
+import { getActiveListings } from "./lib/listings";
+import { featuredStats } from "./lib/mock-data";
 
-export default function Home() {
+// Revalidasi data listing tiap 60 detik (ISR).
+export const revalidate = 60;
+
+const steps = [
+  {
+    icon: "🔎",
+    title: "Pilih Akun",
+    text: "Telusuri katalog & filter berdasarkan game, rank, dan skin yang kamu mau.",
+  },
+  {
+    icon: "🛡️",
+    title: "Bayar Aman",
+    text: "Dana ditahan di rekening bersama sampai akun benar-benar kamu terima.",
+  },
+  {
+    icon: "🎮",
+    title: "Akun Jadi Milikmu",
+    text: "Admin verifikasi serah terima, data login berpindah penuh ke kamu.",
+  },
+];
+
+const benefits = [
+  {
+    icon: "🔐",
+    title: "Rekening Bersama",
+    text: "Uang baru diteruskan ke penjual setelah kamu konfirmasi akun aman.",
+  },
+  {
+    icon: "✅",
+    title: "Verifikasi Admin",
+    text: "Setiap akun dicek keasliannya oleh tim sebelum tayang di marketplace.",
+  },
+  {
+    icon: "⚡",
+    title: "Proses Cepat",
+    text: "Mayoritas transaksi selesai di bawah 15 menit, tanpa ribet.",
+  },
+  {
+    icon: "💬",
+    title: "Support 24/7",
+    text: "Tim bantuan siap membantu kapan pun lewat live chat & WhatsApp.",
+  },
+];
+
+const faqs = [
+  {
+    q: "Apakah aman membeli akun di sini?",
+    a: "Sangat aman. Kami pakai sistem rekening bersama (escrow) — dana kamu ditahan sampai akun diterima dan diverifikasi, baru diteruskan ke penjual.",
+  },
+  {
+    q: "Bagaimana jika akun tidak sesuai?",
+    a: "Kamu dilindungi rekening bersama. Jika akun tidak bisa diakses atau tidak sesuai deskripsi, ajukan refund sebelum konfirmasi penerimaan — dana kembali 100%.",
+  },
+  {
+    q: "Berapa biaya transaksinya?",
+    a: "Tidak ada biaya tersembunyi. Kamu hanya membayar harga akun ditambah biaya admin kecil yang tertera saat checkout.",
+  },
+];
+
+export default async function Home() {
+  const listings = await getActiveListings({ take: 4 });
+
   return (
-    <main className="min-h-screen text-slate-50">
-      {/* Hero Section */}
-      <section className="relative overflow-hidden pt-20 pb-32">
-        <div className="absolute inset-0 -z-10">
-          <div className="absolute top-0 left-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl" />
-          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl" />
+    <main className="text-slate-100">
+      {/* ===== Hero ===== */}
+      <section className="relative overflow-hidden">
+        <div className="pointer-events-none absolute inset-0 -z-10">
+          <div className="absolute -top-24 left-1/2 h-72 w-72 -translate-x-1/2 rounded-full bg-sky-500/20 blur-3xl sm:h-96 sm:w-96" />
+          <div className="absolute bottom-0 right-0 h-64 w-64 rounded-full bg-blue-600/10 blur-3xl" />
         </div>
 
-        <div className="mx-auto max-w-7xl px-6">
-          <div className="grid gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
-            <div className="space-y-6">
-              <div>
-                <span className="inline-block px-4 py-2 rounded-full bg-cyan-500/15 text-cyan-300 text-sm font-medium border border-cyan-500/30">
-                  ✨ Marketplace Terpercaya
-                </span>
-              </div>
+        <div className="mx-auto max-w-7xl px-4 pb-16 pt-12 sm:px-6 sm:pb-24 sm:pt-20">
+          <div className="grid items-center gap-12 lg:grid-cols-[1.05fr_0.95fr]">
+            {/* Copy */}
+            <div className="space-y-6 text-center lg:text-left">
+              <span className="inline-flex items-center gap-2 rounded-full border border-sky-400/30 bg-sky-400/10 px-4 py-1.5 text-xs font-medium text-sky-300 sm:text-sm">
+                <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-sky-400" />
+                Marketplace akun game terpercaya #1
+              </span>
 
-              <h1 className="text-5xl md:text-6xl font-bold leading-tight bg-gradient-to-r from-slate-50 via-cyan-200 to-blue-200 bg-clip-text text-transparent">
-                Jual & Beli Akun Game dengan Aman
+              <h1 className="text-4xl font-extrabold leading-[1.1] tracking-tight sm:text-5xl lg:text-6xl">
+                Jual & Beli{" "}
+                <span className="bg-linear-to-r from-sky-300 via-sky-400 to-blue-500 bg-clip-text text-transparent">
+                  Akun Game
+                </span>{" "}
+                Aman & Cepat
               </h1>
 
-              <p className="text-lg text-slate-300 leading-relaxed max-w-lg">
-                Temukan akun Mobile Legends dan Free Fire dengan rank tinggi, skin lengkap. Setiap transaksi dilindungi oleh sistem verifikasi admin kami.
+              <p className="mx-auto max-w-lg text-base leading-relaxed text-slate-400 sm:text-lg lg:mx-0">
+                Ribuan akun Mobile Legends & Free Fire rank tinggi, skin lengkap.
+                Dilindungi rekening bersama dan verifikasi admin di setiap
+                transaksi.
               </p>
 
-              <div className="flex gap-4 pt-4">
+              <div className="flex flex-col gap-3 pt-2 sm:flex-row sm:justify-center lg:justify-start">
                 <Link
                   href="/catalog"
-                  className="px-8 py-4 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-semibold hover:from-cyan-400 hover:to-blue-500 transition-all duration-300 hover:shadow-lg hover:shadow-cyan-500/20"
+                  className="rounded-xl bg-linear-to-r from-sky-400 to-blue-600 px-7 py-3.5 text-center text-sm font-semibold text-black shadow-lg shadow-sky-500/25 transition-transform hover:scale-[1.03] sm:text-base"
                 >
                   Jelajahi Katalog
                 </Link>
                 <Link
-                  href="/checkout"
-                  className="px-8 py-4 rounded-xl border border-slate-700 bg-slate-900/50 hover:bg-slate-800 text-slate-100 font-semibold transition-all duration-300"
+                  href="/#cara-kerja"
+                  className="rounded-xl border border-white/10 bg-white/5 px-7 py-3.5 text-center text-sm font-semibold text-slate-100 transition-colors hover:bg-white/10 sm:text-base"
                 >
-                  Lihat Checkout
+                  Cara Kerja
                 </Link>
               </div>
-            </div>
 
-            {/* Anime Hero Illustration */}
-            <div className="group relative h-[500px]">
-              <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/30 to-blue-500/30 rounded-3xl blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/10 via-transparent to-blue-500/10 rounded-3xl" />
-              <div className="relative w-full h-full flex items-center justify-center">
-                <AnimeHero />
+              {/* Trust row */}
+              <div className="flex items-center justify-center gap-6 pt-4 text-xs text-slate-500 sm:text-sm lg:justify-start">
+                <span className="flex items-center gap-1.5">⭐ 4.9/5 rating</span>
+                <span className="flex items-center gap-1.5">🔒 100% escrow</span>
+                <span className="flex items-center gap-1.5">⚡ Proses cepat</span>
               </div>
             </div>
-          </div>
-        </div>
-      </section>
 
-      {/* Statistics Section */}
-      <section className="py-16 px-6 border-t border-slate-800/50 bg-gradient-to-b from-transparent via-cyan-500/5 to-transparent">
-        <div className="mx-auto max-w-7xl">
-          <div className="grid gap-8 md:grid-cols-4">
-            {[
-              { icon: "📦", value: "1.2K+", label: "Akun Terjual" },
-              { icon: "👥", value: "850+", label: "User Aktif" },
-              { icon: "✅", value: "98%", label: "Transaksi Aman" },
-              { icon: "🕐", value: "24/7", label: "Admin Verifikasi" },
-            ].map((stat, idx) => (
-              <div key={idx} className="text-center p-6 rounded-2xl border border-slate-800/50 hover:border-cyan-500/30 bg-slate-900/30 backdrop-blur hover:bg-slate-900/50 transition-all duration-300 group">
-                <p className="text-4xl mb-2 group-hover:scale-110 transition-transform duration-300">{stat.icon}</p>
-                <p className="text-3xl font-bold bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">{stat.value}</p>
-                <p className="text-sm text-slate-400 mt-2">{stat.label}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Features Section */}
-      <section className="py-20 px-6">
-        <div className="mx-auto max-w-7xl">
-          <div className="space-y-4 mb-12">
-            <span className="inline-block px-4 py-2 rounded-full bg-cyan-500/15 text-cyan-300 text-sm font-medium border border-cyan-500/30">
-              🎯 Fitur Unggulan
-            </span>
-            <h2 className="text-4xl font-bold">Semua yang Anda Butuhkan</h2>
-          </div>
-
-          <div className="grid gap-6 md:grid-cols-3">
-            {[
-              {
-                icon: "🔐",
-                title: "Keamanan Terjamin",
-                text: "Sistem verifikasi email dan admin untuk setiap transaksi.",
-              },
-              {
-                icon: "📊",
-                title: "Filter Akun Lengkap",
-                text: "Cari akun berdasarkan rank, skin, hero favorit, dan lainnya.",
-              },
-              {
-                icon: "✅",
-                title: "Admin Verifikasi",
-                text: "Setiap transaksi diawasi langsung oleh tim admin profesional.",
-              },
-            ].map((feature, i) => (
-              <div
-                key={i}
-                className="group rounded-2xl border border-slate-700/50 bg-slate-900/50 p-8 hover:border-cyan-500/30 hover:bg-slate-900/80 transition-all duration-300 hover:shadow-lg hover:shadow-cyan-500/10"
-              >
-                <div className="text-4xl mb-4">{feature.icon}</div>
-                <h3 className="text-xl font-semibold text-slate-50">{feature.title}</h3>
-                <p className="mt-3 text-slate-400 leading-relaxed">{feature.text}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Popular Accounts Section */}
-      <section className="py-20 px-6">
-        <div className="mx-auto max-w-7xl">
-          <div className="flex items-center justify-between mb-12">
-            <div className="space-y-2">
-              <span className="inline-block px-4 py-2 rounded-full bg-cyan-500/15 text-cyan-300 text-sm font-medium border border-cyan-500/30">
-                ⭐ Pilihan Populer
-              </span>
-              <h2 className="text-4xl font-bold">Rekomendasi Hari Ini</h2>
-            </div>
-            <Link href="/catalog" className="text-cyan-400 hover:text-cyan-300 font-semibold transition-colors">
-              Lihat Semua →
-            </Link>
-          </div>
-
-          <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-            {gameAccounts.slice(0, 3).map((account) => (
-              <Link
-                key={account.id}
-                href={`/account/${account.id}`}
-                className="group rounded-2xl border border-slate-700/50 bg-slate-900/50 p-6 hover:border-cyan-500/30 hover:bg-slate-900/80 hover:shadow-lg hover:shadow-cyan-500/10 transition-all duration-300"
-              >
-                <div className="flex items-center justify-between mb-4">
-                  <span className="px-3 py-1 rounded-full bg-cyan-500/20 text-cyan-300 text-xs font-semibold border border-cyan-500/30">
-                    {account.game}
-                  </span>
-                  <span className={`text-xs font-semibold ${account.status === "Ready" ? "text-emerald-400" : "text-amber-400"}`}>
-                    {account.status}
-                  </span>
-                </div>
-
-                <h3 className="text-lg font-semibold text-slate-50 group-hover:text-cyan-300 transition-colors">{account.title}</h3>
-                <p className="mt-2 text-sm text-slate-400">{account.description}</p>
-
-                <div className="mt-4 flex flex-wrap gap-2">
-                  <span className="px-3 py-1 rounded-full bg-slate-800/60 text-slate-300 text-xs">
-                    {account.rank}
-                  </span>
-                  <span className="px-3 py-1 rounded-full bg-slate-800/60 text-slate-300 text-xs">
-                    {account.skins} Skin
-                  </span>
-                </div>
-
-                <div className="mt-6 flex items-center justify-between pt-4 border-t border-slate-700/50">
-                  <div>
-                    <p className="text-xs text-slate-400">Harga</p>
-                    <p className="text-2xl font-bold text-cyan-400">Rp {account.price.toLocaleString("id-ID")}</p>
+            {/* Brand logo */}
+            <div className="relative mx-auto flex w-full max-w-md items-center justify-center py-6 lg:max-w-none lg:py-0">
+              <div className="pointer-events-none absolute inset-0 -z-10 rounded-full bg-linear-to-br from-sky-500/25 to-blue-600/20 blur-3xl" />
+              <div className="flex flex-col items-center gap-7">
+                {/* Logo mark — menyala lembut saat ditekan */}
+                <button
+                  type="button"
+                  aria-label="Logo AthenaMarket"
+                  className="group relative outline-none"
+                >
+                  <div className="pointer-events-none absolute -inset-2 -z-10 rounded-[2.5rem] bg-linear-to-br from-sky-400 to-blue-600 opacity-40 blur-2xl transition-opacity duration-300 group-active:opacity-70" />
+                  <div className="grid h-40 w-40 place-items-center rounded-[2.5rem] bg-linear-to-br from-sky-400 to-blue-600 text-6xl font-black text-black shadow-2xl shadow-sky-500/40 transition-transform duration-200 group-active:scale-95 sm:h-52 sm:w-52 sm:text-7xl">
+                    AM
                   </div>
-                  <div className="px-4 py-2 rounded-lg bg-cyan-500/20 text-cyan-300 text-sm font-medium group-hover:bg-cyan-500/30 transition-colors">
-                    Lihat →
-                  </div>
+                </button>
+                {/* Wordmark */}
+                <div className="text-center">
+                  <p className="text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
+                    Athena<span className="text-sky-400">Market</span>
+                  </p>
+                  <p className="mt-2 text-sm text-slate-400">
+                    Marketplace Akun Game Terpercaya
+                  </p>
                 </div>
-              </Link>
-            ))}
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-20 px-6">
-        <div className="mx-auto max-w-4xl">
-          <div className="relative rounded-3xl overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/20 via-blue-500/20 to-purple-500/20 blur-2xl" />
-            <div className="relative rounded-3xl border border-cyan-500/30 bg-slate-900/80 backdrop-blur p-12 text-center">
-              <h2 className="text-4xl font-bold mb-4">Siap Mulai?</h2>
-              <p className="text-slate-300 mb-8 max-w-2xl mx-auto">
-                Bergabunglah dengan ribuan pembeli dan penjual yang telah mempercayai platform kami.
+      {/* ===== Stats ===== */}
+      <section className="border-y border-white/5 bg-white/2">
+        <div className="mx-auto grid max-w-7xl grid-cols-2 gap-px px-4 py-10 sm:px-6 lg:grid-cols-4">
+          {featuredStats.map((stat) => (
+            <div key={stat.label} className="px-2 text-center">
+              <p className="bg-linear-to-r from-sky-300 to-blue-500 bg-clip-text text-3xl font-extrabold text-transparent sm:text-4xl">
+                {stat.value}
               </p>
-              <Link
-                href="/catalog"
-                className="inline-block px-8 py-4 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-semibold hover:from-cyan-400 hover:to-blue-500 transition-all duration-300 hover:shadow-lg hover:shadow-cyan-500/20"
-              >
-                Jelajahi Katalog Sekarang
-              </Link>
+              <p className="mt-1 text-xs text-slate-400 sm:text-sm">
+                {stat.label}
+              </p>
             </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ===== How it works ===== */}
+      <section id="cara-kerja" className="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-24">
+        <div className="mx-auto max-w-2xl text-center">
+          <span className="text-sm font-semibold text-sky-400">CARA KERJA</span>
+          <h2 className="mt-2 text-3xl font-bold sm:text-4xl">
+            Tiga Langkah, Beres
+          </h2>
+          <p className="mt-3 text-slate-400">
+            Tanpa ribet, tanpa khawatir penipuan. Transaksi dijamin aman dari
+            awal sampai akhir.
+          </p>
+        </div>
+
+        <div className="mt-12 grid gap-6 md:grid-cols-3">
+          {steps.map((step, i) => (
+            <div
+              key={step.title}
+              className="relative rounded-2xl border border-white/10 bg-white/3 p-6 transition-colors hover:border-sky-400/30"
+            >
+              <span className="absolute right-5 top-5 text-5xl font-black text-white/5">
+                {i + 1}
+              </span>
+              <div className="grid h-12 w-12 place-items-center rounded-xl bg-sky-400/10 text-2xl">
+                {step.icon}
+              </div>
+              <h3 className="mt-4 text-lg font-semibold text-white">
+                {step.title}
+              </h3>
+              <p className="mt-2 text-sm leading-relaxed text-slate-400">
+                {step.text}
+              </p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ===== Popular accounts ===== */}
+      <section className="mx-auto max-w-7xl px-4 pb-16 sm:px-6 sm:pb-24">
+        <div className="flex items-end justify-between gap-4">
+          <div>
+            <span className="text-sm font-semibold text-sky-400">
+              PILIHAN POPULER
+            </span>
+            <h2 className="mt-2 text-3xl font-bold sm:text-4xl">
+              Rekomendasi Hari Ini
+            </h2>
+          </div>
+          <Link
+            href="/catalog"
+            className="hidden shrink-0 text-sm font-semibold text-sky-400 hover:text-sky-300 sm:block"
+          >
+            Lihat Semua →
+          </Link>
+        </div>
+
+        <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          {listings.map((account) => (
+            <AccountCard key={account.id} account={account} />
+          ))}
+        </div>
+
+        <div className="mt-8 text-center sm:hidden">
+          <Link
+            href="/catalog"
+            className="inline-block rounded-xl border border-white/10 bg-white/5 px-6 py-3 text-sm font-semibold text-slate-100"
+          >
+            Lihat Semua Akun →
+          </Link>
+        </div>
+      </section>
+
+      {/* ===== Benefits ===== */}
+      <section id="keunggulan" className="border-t border-white/5 bg-white/2">
+        <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-24">
+          <div className="mx-auto max-w-2xl text-center">
+            <span className="text-sm font-semibold text-sky-400">
+              KENAPA KAMI
+            </span>
+            <h2 className="mt-2 text-3xl font-bold sm:text-4xl">
+              Dibuat Untuk Rasa Aman Kamu
+            </h2>
+          </div>
+
+          <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            {benefits.map((b) => (
+              <div
+                key={b.title}
+                className="rounded-2xl border border-white/10 bg-white/3 p-6"
+              >
+                <div className="grid h-12 w-12 place-items-center rounded-xl bg-sky-400/10 text-2xl">
+                  {b.icon}
+                </div>
+                <h3 className="mt-4 text-lg font-semibold text-white">
+                  {b.title}
+                </h3>
+                <p className="mt-2 text-sm leading-relaxed text-slate-400">
+                  {b.text}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ===== FAQ ===== */}
+      <section id="faq" className="mx-auto max-w-3xl px-4 py-16 sm:px-6 sm:py-24">
+        <div className="text-center">
+          <span className="text-sm font-semibold text-sky-400">FAQ</span>
+          <h2 className="mt-2 text-3xl font-bold sm:text-4xl">
+            Pertanyaan Umum
+          </h2>
+        </div>
+
+        <div className="mt-10 space-y-3">
+          {faqs.map((faq) => (
+            <details
+              key={faq.q}
+              className="group rounded-2xl border border-white/10 bg-white/3 p-5 [&_summary::-webkit-details-marker]:hidden"
+            >
+              <summary className="flex cursor-pointer items-center justify-between gap-4 font-semibold text-white">
+                {faq.q}
+                <span className="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-sky-400/10 text-sky-300 transition-transform group-open:rotate-45">
+                  +
+                </span>
+              </summary>
+              <p className="mt-3 text-sm leading-relaxed text-slate-400">
+                {faq.a}
+              </p>
+            </details>
+          ))}
+        </div>
+      </section>
+
+      {/* ===== CTA ===== */}
+      <section className="mx-auto max-w-7xl px-4 pb-20 sm:px-6">
+        <div className="relative overflow-hidden rounded-3xl border border-sky-400/20 bg-linear-to-br from-sky-500/10 via-blue-600/5 to-transparent px-6 py-12 text-center sm:px-12 sm:py-16">
+          <div className="pointer-events-none absolute -top-20 left-1/2 h-60 w-60 -translate-x-1/2 rounded-full bg-sky-500/20 blur-3xl" />
+          <h2 className="relative text-3xl font-bold sm:text-4xl">
+            Siap Mulai Transaksi Aman?
+          </h2>
+          <p className="relative mx-auto mt-3 max-w-xl text-slate-400">
+            Gabung bersama ribuan gamer yang sudah mempercayai AthenaMarket
+            untuk jual beli akun favorit mereka.
+          </p>
+          <div className="relative mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
+            <Link
+              href="/register"
+              className="rounded-xl bg-linear-to-r from-sky-400 to-blue-600 px-8 py-3.5 text-sm font-semibold text-black shadow-lg shadow-sky-500/25 transition-transform hover:scale-[1.03] sm:text-base"
+            >
+              Daftar Gratis
+            </Link>
+            <Link
+              href="/catalog"
+              className="rounded-xl border border-white/10 bg-white/5 px-8 py-3.5 text-sm font-semibold text-slate-100 hover:bg-white/10 sm:text-base"
+            >
+              Lihat Katalog
+            </Link>
           </div>
         </div>
       </section>
