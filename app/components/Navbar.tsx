@@ -63,7 +63,7 @@ export default function Navbar() {
           ) : user ? (
             <>
               <Link
-                href="/dashboard"
+                href="/admin"
                 className="flex items-center gap-2 rounded-lg px-2 py-1.5 text-sm font-semibold text-slate-200 hover:text-white"
               >
                 <span className="grid h-8 w-8 place-items-center rounded-full bg-linear-to-br from-sky-400 to-blue-600 text-xs font-black text-black">
@@ -137,7 +137,7 @@ export default function Navbar() {
           {user ? (
             <div className="space-y-1 pt-3">
               <Link
-                href="/dashboard"
+                href="/admin"
                 onClick={() => setOpen(false)}
                 className="flex items-center gap-2 rounded-lg px-3 py-2.5 text-base font-medium text-slate-200 hover:bg-white/5"
               >

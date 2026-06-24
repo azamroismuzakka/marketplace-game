@@ -5,7 +5,7 @@ import { jwtVerify } from "jose";
 // Optimistic auth check: hanya membaca & memverifikasi cookie (tanpa query DB).
 // Pertahanan utama tetap di server (requireUser / DAL pada masing-masing halaman).
 
-const PROTECTED = ["/dashboard", "/admin"];
+const PROTECTED = ["/admin"];
 const AUTH_PAGES = ["/login"];
 
 const encodedKey = new TextEncoder().encode(process.env.SESSION_SECRET);

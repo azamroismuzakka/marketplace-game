@@ -115,12 +115,40 @@ export async function getAdminListing(id: string) {
   return {
     id: l.id,
     title: l.title,
+    description: l.description,
+    gameId: l.gameId,
     game: l.game.name,
     status: l.status,
     price: Number(l.price),
+    rank: l.rank,
+    skinCount: l.skinCount,
+    winRate: l.winRate,
+    iconEmoji: l.iconEmoji,
+    isFeatured: l.isFeatured,
     emoji: l.iconEmoji ?? "🎮",
     images: l.images,
   };
+}
+
+/** ADMIN: ringkasan statistik untuk dashboard. */
+export async function getAdminStats() {
+  const [total, active, sold, inactive, games, images] = await Promise.all([
+    prisma.listing.count(),
+    prisma.listing.count({ where: { status: "ACTIVE" } }),
+    prisma.listing.count({ where: { status: "SOLD" } }),
+    prisma.listing.count({ where: { status: "INACTIVE" } }),
+    prisma.game.count(),
+    prisma.listingImage.count(),
+  ]);
+  return { total, active, sold, inactive, games, images };
+}
+
+/** Daftar game (untuk dropdown form). */
+export async function getGames() {
+  return prisma.game.findMany({
+    select: { id: true, name: true },
+    orderBy: { name: "asc" },
+  });
 }
 
 /** Listing lain dari game yang sama (untuk rekomendasi). */
