@@ -80,17 +80,11 @@ export async function POST(
     }));
   } catch (err) {
     console.error("Upload gambar gagal:", err);
-    const keyDetected = Boolean(process.env.SUPABASE_SERVICE_ROLE_KEY);
-    const supabaseNames = Object.keys(process.env).filter((k) =>
-      k.includes("SUPABASE"),
-    );
     const detail = useSupabaseStorage
       ? err instanceof Error
         ? err.message
         : "error tidak diketahui dari Supabase"
-      : `[diag v3] Storage tidak aktif. SERVICE_KEY terbaca: ${keyDetected}. Nama env SUPABASE yang terbaca server: [${
-          supabaseNames.join(" | ") || "KOSONG — tidak ada satupun"
-        }].`;
+      : "Supabase Storage belum aktif di server ini. Pastikan SUPABASE_SERVICE_ROLE_KEY sudah diset di Environment Variables (scope Production) lalu redeploy.";
     return NextResponse.json(
       { message: `Gagal menyimpan gambar: ${detail}` },
       { status: 500 },
