@@ -76,7 +76,9 @@ export default function ListingForm({
         if (data.errors) setFieldErrors(data.errors);
         return;
       }
-      router.push("/admin");
+      // Setelah buat akun baru → ke halaman akun itu (ada area upload foto).
+      // Setelah edit → kembali ke dashboard.
+      router.push(isEdit ? "/admin" : `/admin/listings/${data.id}`);
       router.refresh();
     } catch {
       setError("Terjadi kesalahan jaringan.");
