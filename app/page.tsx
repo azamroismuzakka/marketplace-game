@@ -3,8 +3,9 @@ import AccountCard from "./components/AccountCard";
 import { getActiveListings } from "./lib/listings";
 import { featuredStats } from "./lib/mock-data";
 
-// Revalidasi data listing tiap 60 detik (ISR).
-export const revalidate = 60;
+// Render saat diakses (runtime), bukan saat build. Ini mencegah `next build`
+// mencoba query database (yang tak terjangkau dari proses build di Vercel).
+export const dynamic = "force-dynamic";
 
 const steps = [
   {
