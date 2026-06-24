@@ -45,20 +45,13 @@ export default function ListingForm({
 
     const f = new FormData(e.currentTarget);
     const str = (k: string) => String(f.get(k) ?? "").trim();
-    const optNum = (k: string) => {
-      const v = str(k);
-      return v === "" ? null : Number(v);
-    };
 
     const payload = {
       gameId: str("gameId"),
       title: str("title"),
       description: str("description"),
       price: Number(str("price") || 0),
-      rank: str("rank") || null,
       skinCount: Number(str("skinCount") || 0),
-      winRate: optNum("winRate"),
-      iconEmoji: str("iconEmoji") || null,
       status: str("status"),
       isFeatured: f.get("isFeatured") === "on",
     };
@@ -149,7 +142,7 @@ export default function ListingForm({
         {err("title")}
       </div>
 
-      <div className="grid gap-5 sm:grid-cols-3">
+      <div className="grid gap-5 sm:grid-cols-2">
         <div>
           <label className={labelCls}>Harga (Rp)</label>
           <input
@@ -170,39 +163,6 @@ export default function ListingForm({
             type="number"
             min={0}
             defaultValue={initial?.skinCount ?? 0}
-            className={inputCls}
-          />
-        </div>
-        <div>
-          <label className={labelCls}>Win Rate (%)</label>
-          <input
-            name="winRate"
-            type="number"
-            min={0}
-            max={100}
-            defaultValue={initial?.winRate ?? ""}
-            placeholder="opsional"
-            className={inputCls}
-          />
-        </div>
-      </div>
-
-      <div className="grid gap-5 sm:grid-cols-2">
-        <div>
-          <label className={labelCls}>Rank</label>
-          <input
-            name="rank"
-            defaultValue={initial?.rank ?? ""}
-            placeholder="Mythical Glory"
-            className={inputCls}
-          />
-        </div>
-        <div>
-          <label className={labelCls}>Emoji Ikon</label>
-          <input
-            name="iconEmoji"
-            defaultValue={initial?.iconEmoji ?? ""}
-            placeholder="⚔️"
             className={inputCls}
           />
         </div>
