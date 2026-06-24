@@ -7,8 +7,12 @@ import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 // Pakai SUPABASE_URL (variabel server biasa, dibaca saat runtime) lebih dulu.
 // NEXT_PUBLIC_SUPABASE_URL ditanam saat build dan bisa jadi `undefined` bila
 // ditandai "Sensitive" di Vercel — makanya jangan diandalkan di server.
+// Fallback terakhir: URL proyek (ini URL publik, aman ditaruh di kode) supaya
+// Storage tetap aktif walau env URL belum diset di Vercel.
 const SUPABASE_URL =
-  process.env.SUPABASE_URL ?? process.env.NEXT_PUBLIC_SUPABASE_URL;
+  process.env.SUPABASE_URL ??
+  process.env.NEXT_PUBLIC_SUPABASE_URL ??
+  "https://nizbqtevmjqgiekazckx.supabase.co";
 const SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
 const BUCKET = process.env.SUPABASE_STORAGE_BUCKET ?? "listings";
 
