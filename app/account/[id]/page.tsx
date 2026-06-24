@@ -130,6 +130,14 @@ export default async function AccountDetailPage({
                 >
                   Tanya Admin Dulu
                 </a>
+                <a
+                  href="https://chat.whatsapp.com/IAF64fI1KkeLm8EVYkGZSd?mode=gi_t"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block rounded-xl border border-emerald-400/30 bg-emerald-400/10 px-6 py-3.5 text-center text-sm font-semibold text-emerald-300 hover:bg-emerald-400/20"
+                >
+                  👥 Gabung Grup WhatsApp
+                </a>
               </div>
 
               <ul className="mt-6 space-y-2.5 text-sm text-slate-400">
