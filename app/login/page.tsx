@@ -37,7 +37,7 @@ export default function LoginPage() {
       }
 
       await refresh();
-      router.push("/dashboard");
+      router.push("/admin");
       router.refresh();
     } catch {
       setError("Terjadi kesalahan jaringan. Coba lagi.");
@@ -53,9 +53,12 @@ export default function LoginPage() {
           <div className="pointer-events-none absolute -top-20 left-1/2 h-40 w-40 -translate-x-1/2 rounded-full bg-sky-500/20 blur-3xl" />
 
           <div className="relative text-center">
-            <h1 className="text-2xl font-bold text-white">Selamat Datang 👋</h1>
+            <span className="grid mx-auto h-12 w-12 place-items-center rounded-2xl bg-linear-to-br from-sky-400 to-blue-600 text-lg font-black text-black">
+              AM
+            </span>
+            <h1 className="mt-4 text-2xl font-bold text-white">Masuk Admin</h1>
             <p className="mt-1 text-sm text-slate-400">
-              Masuk untuk melanjutkan ke AthenaMarket
+              Khusus pengelola AthenaMarket
             </p>
           </div>
 
@@ -75,7 +78,7 @@ export default function LoginPage() {
                 name="email"
                 required
                 autoComplete="email"
-                placeholder="kamu@email.com"
+                placeholder="admin@athenamarket.id"
                 className="w-full rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-sm text-white outline-none placeholder:text-slate-500 focus:border-sky-400/50"
               />
             </div>
@@ -103,15 +106,6 @@ export default function LoginPage() {
               </div>
             </div>
 
-            <div className="flex items-center justify-between text-sm">
-              <label className="flex items-center gap-2 text-slate-400">
-                <input type="checkbox" className="accent-sky-400" /> Ingat saya
-              </label>
-              <Link href="/forgot" className="text-sky-400 hover:text-sky-300">
-                Lupa password?
-              </Link>
-            </div>
-
             <button
               type="submit"
               disabled={pending}
@@ -121,14 +115,12 @@ export default function LoginPage() {
             </button>
           </form>
 
-          <p className="relative mt-6 text-center text-sm text-slate-400">
-            Belum punya akun?{" "}
-            <Link
-              href="/register"
-              className="font-semibold text-sky-400 hover:text-sky-300"
-            >
-              Daftar sekarang
-            </Link>
+          <p className="relative mt-6 text-center text-xs text-slate-500">
+            Mau beli akun?{" "}
+            <Link href="/catalog" className="text-sky-400 hover:text-sky-300">
+              Lihat katalog
+            </Link>{" "}
+            — transaksi via WhatsApp, tanpa perlu akun.
           </p>
         </div>
       </div>

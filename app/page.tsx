@@ -13,22 +13,22 @@ const steps = [
     text: "Telusuri katalog & filter berdasarkan game, rank, dan skin yang kamu mau.",
   },
   {
-    icon: "🛡️",
-    title: "Bayar Aman",
-    text: "Dana ditahan di rekening bersama sampai akun benar-benar kamu terima.",
+    icon: "💬",
+    title: "Chat Admin via WhatsApp",
+    text: "Klik 'Beli via WhatsApp', lalu sepakati harga & pembayaran langsung dengan admin.",
   },
   {
     icon: "🎮",
     title: "Akun Jadi Milikmu",
-    text: "Admin verifikasi serah terima, data login berpindah penuh ke kamu.",
+    text: "Admin serahkan data login akun setelah transaksi selesai.",
   },
 ];
 
 const benefits = [
   {
-    icon: "🔐",
-    title: "Rekening Bersama",
-    text: "Uang baru diteruskan ke penjual setelah kamu konfirmasi akun aman.",
+    icon: "💬",
+    title: "Transaksi via WhatsApp",
+    text: "Beli langsung dengan admin resmi lewat WhatsApp — cepat dan jelas.",
   },
   {
     icon: "✅",
@@ -50,15 +50,15 @@ const benefits = [
 const faqs = [
   {
     q: "Apakah aman membeli akun di sini?",
-    a: "Sangat aman. Kami pakai sistem rekening bersama (escrow) — dana kamu ditahan sampai akun diterima dan diverifikasi, baru diteruskan ke penjual.",
+    a: "Aman. Semua akun diverifikasi admin sebelum tayang, dan kamu bertransaksi langsung dengan admin resmi kami lewat WhatsApp.",
   },
   {
-    q: "Bagaimana jika akun tidak sesuai?",
-    a: "Kamu dilindungi rekening bersama. Jika akun tidak bisa diakses atau tidak sesuai deskripsi, ajukan refund sebelum konfirmasi penerimaan — dana kembali 100%.",
+    q: "Bagaimana cara membeli akun?",
+    a: "Pilih akun di katalog, klik 'Beli via WhatsApp', lalu lanjutkan obrolan dan pembayaran langsung dengan admin. Tidak perlu daftar akun.",
   },
   {
     q: "Berapa biaya transaksinya?",
-    a: "Tidak ada biaya tersembunyi. Kamu hanya membayar harga akun ditambah biaya admin kecil yang tertera saat checkout.",
+    a: "Harga yang tertera adalah harga akun. Detail pembayaran diatur langsung dengan admin saat chat WhatsApp — tanpa biaya tersembunyi di web.",
   },
 ];
 
@@ -93,8 +93,7 @@ export default async function Home() {
 
               <p className="mx-auto max-w-lg text-base leading-relaxed text-slate-400 sm:text-lg lg:mx-0">
                 Ribuan akun Mobile Legends & Free Fire rank tinggi, skin lengkap.
-                Dilindungi rekening bersama dan verifikasi admin di setiap
-                transaksi.
+                Semua diverifikasi admin — beli mudah langsung via WhatsApp.
               </p>
 
               <div className="flex flex-col gap-3 pt-2 sm:flex-row sm:justify-center lg:justify-start">
@@ -115,7 +114,7 @@ export default async function Home() {
               {/* Trust row */}
               <div className="flex items-center justify-center gap-6 pt-4 text-xs text-slate-500 sm:text-sm lg:justify-start">
                 <span className="flex items-center gap-1.5">⭐ 4.9/5 rating</span>
-                <span className="flex items-center gap-1.5">🔒 100% escrow</span>
+                <span className="flex items-center gap-1.5">💬 Via WhatsApp</span>
                 <span className="flex items-center gap-1.5">⚡ Proses cepat</span>
               </div>
             </div>
@@ -304,25 +303,27 @@ export default async function Home() {
         <div className="relative overflow-hidden rounded-3xl border border-sky-400/20 bg-linear-to-br from-sky-500/10 via-blue-600/5 to-transparent px-6 py-12 text-center sm:px-12 sm:py-16">
           <div className="pointer-events-none absolute -top-20 left-1/2 h-60 w-60 -translate-x-1/2 rounded-full bg-sky-500/20 blur-3xl" />
           <h2 className="relative text-3xl font-bold sm:text-4xl">
-            Siap Mulai Transaksi Aman?
+            Siap Beli Akun Impianmu?
           </h2>
           <p className="relative mx-auto mt-3 max-w-xl text-slate-400">
-            Gabung bersama ribuan gamer yang sudah mempercayai AthenaMarket
-            untuk jual beli akun favorit mereka.
+            Pilih akun di katalog, lalu transaksi langsung dengan admin lewat
+            WhatsApp. Cepat, mudah, tanpa perlu daftar akun.
           </p>
           <div className="relative mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
             <Link
-              href="/register"
+              href="/catalog"
               className="rounded-xl bg-linear-to-r from-sky-400 to-blue-600 px-8 py-3.5 text-sm font-semibold text-black shadow-lg shadow-sky-500/25 transition-transform hover:scale-[1.03] sm:text-base"
             >
-              Daftar Gratis
+              Jelajahi Katalog
             </Link>
-            <Link
-              href="/catalog"
+            <a
+              href="https://wa.me/6285867126940"
+              target="_blank"
+              rel="noopener noreferrer"
               className="rounded-xl border border-white/10 bg-white/5 px-8 py-3.5 text-sm font-semibold text-slate-100 hover:bg-white/10 sm:text-base"
             >
-              Lihat Katalog
-            </Link>
+              💬 Hubungi via WhatsApp
+            </a>
           </div>
         </div>
       </section>

@@ -99,17 +99,19 @@ export default function AboutPage() {
           </h2>
           <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-center">
             <Link
-              href="/register"
+              href="/catalog"
               className="rounded-xl bg-linear-to-r from-sky-400 to-blue-600 px-7 py-3 text-sm font-semibold text-black shadow-lg shadow-sky-500/25 transition-transform hover:scale-[1.03]"
             >
-              Daftar Sekarang
+              Jelajahi Katalog
             </Link>
-            <Link
-              href="/catalog"
+            <a
+              href="https://wa.me/6285867126940"
+              target="_blank"
+              rel="noopener noreferrer"
               className="rounded-xl border border-white/10 bg-white/5 px-7 py-3 text-sm font-semibold text-slate-100 hover:bg-white/10"
             >
-              Lihat Katalog
-            </Link>
+              💬 Hubungi via WhatsApp
+            </a>
           </div>
         </div>
       </section>

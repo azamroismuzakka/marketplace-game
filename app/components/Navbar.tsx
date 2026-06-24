@@ -80,20 +80,12 @@ export default function Navbar() {
               </button>
             </>
           ) : (
-            <>
-              <Link
-                href="/login"
-                className="rounded-lg px-4 py-2 text-sm font-semibold text-slate-200 hover:text-white"
-              >
-                Masuk
-              </Link>
-              <Link
-                href="/register"
-                className="rounded-lg bg-linear-to-r from-sky-400 to-blue-600 px-4 py-2 text-sm font-semibold text-black shadow-lg shadow-sky-500/20 transition-transform hover:scale-[1.03]"
-              >
-                Daftar
-              </Link>
-            </>
+            <Link
+              href="/login"
+              className="rounded-lg border border-white/10 px-4 py-2 text-sm font-semibold text-slate-200 hover:bg-white/5 hover:text-white"
+            >
+              Masuk Admin
+            </Link>
           )}
         </div>
 
@@ -163,20 +155,13 @@ export default function Navbar() {
               </button>
             </div>
           ) : (
-            <div className="grid grid-cols-2 gap-3 pt-3">
+            <div className="pt-3">
               <Link
                 href="/login"
                 onClick={() => setOpen(false)}
-                className="rounded-lg border border-white/10 px-4 py-2.5 text-center text-sm font-semibold text-slate-100"
+                className="block rounded-lg border border-white/10 px-4 py-2.5 text-center text-sm font-semibold text-slate-100"
               >
-                Masuk
-              </Link>
-              <Link
-                href="/register"
-                onClick={() => setOpen(false)}
-                className="rounded-lg bg-linear-to-r from-sky-400 to-blue-600 px-4 py-2.5 text-center text-sm font-semibold text-black"
-              >
-                Daftar
+                Masuk Admin
               </Link>
             </div>
           )}

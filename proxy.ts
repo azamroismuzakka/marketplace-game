@@ -5,8 +5,8 @@ import { jwtVerify } from "jose";
 // Optimistic auth check: hanya membaca & memverifikasi cookie (tanpa query DB).
 // Pertahanan utama tetap di server (requireUser / DAL pada masing-masing halaman).
 
-const PROTECTED = ["/dashboard", "/checkout", "/admin"];
-const AUTH_PAGES = ["/login", "/register"];
+const PROTECTED = ["/dashboard", "/admin"];
+const AUTH_PAGES = ["/login"];
 
 const encodedKey = new TextEncoder().encode(process.env.SESSION_SECRET);
 
@@ -40,9 +40,9 @@ export async function proxy(request: NextRequest) {
     return NextResponse.redirect(new URL("/login", request.nextUrl));
   }
 
-  // Sudah login tapi buka /login atau /register → ke /dashboard.
+  // Sudah login tapi buka /login → ke panel admin.
   if (isAuthPage && loggedIn) {
-    return NextResponse.redirect(new URL("/dashboard", request.nextUrl));
+    return NextResponse.redirect(new URL("/admin", request.nextUrl));
   }
 
   return NextResponse.next();

@@ -85,9 +85,9 @@ export default async function AccountDetailPage({
               <h2 className="text-lg font-semibold text-white">Deskripsi</h2>
               <p className="mt-3 leading-relaxed text-slate-400">
                 {account.description} Akun ini telah melalui proses verifikasi
-                admin untuk memastikan keaslian dan keamanannya. Pembelian
-                dilindungi sistem rekening bersama — dana baru diteruskan ke
-                penjual setelah kamu mengonfirmasi akun diterima.
+                admin untuk memastikan keaslian dan keamanannya. Untuk membeli,
+                klik tombol di samping dan lanjutkan transaksi langsung dengan
+                admin lewat WhatsApp.
               </p>
             </div>
           </div>
@@ -110,12 +110,16 @@ export default async function AccountDetailPage({
               </div>
 
               <div className="mt-5 space-y-3">
-                <Link
-                  href={`/checkout?account=${account.id}`}
-                  className="block rounded-xl bg-linear-to-r from-sky-400 to-blue-600 px-6 py-3.5 text-center text-sm font-semibold text-black shadow-lg shadow-sky-500/25 transition-transform hover:scale-[1.02]"
+                <a
+                  href={`https://wa.me/6285867126940?text=${encodeURIComponent(
+                    `Halo admin AthenaMarket, saya mau BELI akun "${account.title}" (${account.id}) seharga Rp ${account.price.toLocaleString("id-ID")}. Apakah masih tersedia?`,
+                  )}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center gap-2 rounded-xl bg-linear-to-r from-sky-400 to-blue-600 px-6 py-3.5 text-center text-sm font-semibold text-black shadow-lg shadow-sky-500/25 transition-transform hover:scale-[1.02]"
                 >
-                  Beli Sekarang
-                </Link>
+                  💬 Beli via WhatsApp
+                </a>
                 <a
                   href={`https://wa.me/6285867126940?text=${encodeURIComponent(
                     `Halo admin AthenaMarket, saya mau tanya tentang akun "${account.title}" (${account.id}).`,
@@ -124,21 +128,20 @@ export default async function AccountDetailPage({
                   rel="noopener noreferrer"
                   className="block rounded-xl border border-white/10 bg-white/5 px-6 py-3.5 text-center text-sm font-semibold text-slate-100 hover:bg-white/10"
                 >
-                  Tanya Admin via WhatsApp
+                  Tanya Admin Dulu
                 </a>
               </div>
 
               <ul className="mt-6 space-y-2.5 text-sm text-slate-400">
                 <li className="flex items-center gap-2">
-                  <span className="text-sky-400">✓</span> Dilindungi rekening
-                  bersama
+                  <span className="text-sky-400">✓</span> Transaksi langsung via
+                  WhatsApp
                 </li>
                 <li className="flex items-center gap-2">
                   <span className="text-sky-400">✓</span> Sudah diverifikasi admin
                 </li>
                 <li className="flex items-center gap-2">
-                  <span className="text-sky-400">✓</span> Garansi serah terima
-                  aman
+                  <span className="text-sky-400">✓</span> Respons cepat & ramah
                 </li>
               </ul>
             </div>

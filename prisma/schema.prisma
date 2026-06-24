@@ -66,14 +66,28 @@ model User {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
-  listings        Listing[]  @relation("SellerListings")
-  orders          Order[]    @relation("BuyerOrders")
-  favorites       Favorite[]
-  reviewsWritten  Review[]   @relation("ReviewAuthor")
-  reviewsReceived Review[]   @relation("ReviewSeller")
+  listings           Listing[]           @relation("SellerListings")
+  orders             Order[]             @relation("BuyerOrders")
+  favorites          Favorite[]
+  reviewsWritten     Review[]            @relation("ReviewAuthor")
+  reviewsReceived    Review[]            @relation("ReviewSeller")
+  verificationTokens VerificationToken[]
 
   @@index([role])
   @@map("users")
+}
+
+model VerificationToken {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  userId    String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("verification_tokens")
 }
 
 model Game {
