@@ -131,12 +131,12 @@ export default async function AccountDetailPage({
                   Tanya Admin Dulu
                 </a>
                 <a
-                  href="https://chat.whatsapp.com/IAF64fI1KkeLm8EVYkGZSd?mode=gi_t"
+                  href="https://www.instagram.com/athenamarket.id?igsh=aDFxMjhpa3BnN25o"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="block rounded-xl border border-emerald-400/30 bg-emerald-400/10 px-6 py-3.5 text-center text-sm font-semibold text-emerald-300 hover:bg-emerald-400/20"
+                  className="block rounded-xl border border-pink-400/30 bg-pink-400/10 px-6 py-3.5 text-center text-sm font-semibold text-pink-300 hover:bg-pink-400/20"
                 >
-                  👥 Gabung Grup WhatsApp
+                  📷 Ikuti Instagram Kami
                 </a>
               </div>
 
