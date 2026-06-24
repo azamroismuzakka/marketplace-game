@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import sharp from "sharp";
 import { prisma } from "@/app/lib/prisma";
 import { getCurrentUser } from "@/app/lib/auth/dal";
 import { saveImage, useSupabaseStorage } from "@/app/lib/storage";
@@ -48,16 +49,34 @@ export async function POST(
     );
   }
 
-  const ext = file.type.split("/")[1].replace("jpeg", "jpg");
-  const bytes = Buffer.from(await file.arrayBuffer());
+  const original = Buffer.from(await file.arrayBuffer());
+
+  // Konversi ke WebP (lebih ringan & cepat). Jika sudah WebP, biarkan apa adanya.
+  let bytes: Buffer = original;
+  if (file.type !== "image/webp") {
+    try {
+      bytes = await sharp(
+        original,
+        file.type === "image/gif" ? { animated: true } : {},
+      )
+        .webp({ quality: 82 })
+        .toBuffer();
+    } catch (err) {
+      console.error("Konversi WebP gagal:", err);
+      return NextResponse.json(
+        { message: "Gagal memproses gambar." },
+        { status: 500 },
+      );
+    }
+  }
 
   let url: string;
   try {
     ({ url } = await saveImage({
       listingId: id,
       bytes,
-      ext,
-      contentType: file.type,
+      ext: "webp",
+      contentType: "image/webp",
     }));
   } catch (err) {
     console.error("Upload gambar gagal:", err);
