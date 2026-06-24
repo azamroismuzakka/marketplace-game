@@ -44,9 +44,27 @@ export default function Footer() {
               </span>
             </Link>
             <p className="max-w-xs text-sm leading-relaxed text-slate-400">
-              Marketplace jual beli akun game paling aman. Setiap transaksi
-              dilindungi sistem rekening bersama & verifikasi admin.
+              Marketplace akun game terpercaya. Semua akun diverifikasi admin —
+              transaksi langsung & mudah via WhatsApp.
             </p>
+            <div className="flex items-center gap-3">
+              <a
+                href="https://wa.me/6285867126940"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm font-medium text-slate-200 hover:bg-white/10"
+              >
+                💬 WhatsApp
+              </a>
+              <a
+                href="https://www.instagram.com/athenamarket.id?igsh=aDFxMjhpa3BnN25o"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="rounded-lg border border-pink-400/30 bg-pink-400/10 px-3 py-2 text-sm font-medium text-pink-300 hover:bg-pink-400/20"
+              >
+                📷 Instagram
+              </a>
+            </div>
           </div>
 
           {/* Nav columns */}

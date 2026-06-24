@@ -20,7 +20,12 @@ const channels: {
     value: "azamroismuzakka123@gmail.com",
     href: "mailto:azamroismuzakka123@gmail.com",
   },
-  { icon: "💬", label: "Live Chat", value: "Tersedia 24/7 di pojok kanan bawah" },
+  {
+    icon: "📷",
+    label: "Instagram",
+    value: "@athenamarket.id",
+    href: "https://www.instagram.com/athenamarket.id?igsh=aDFxMjhpa3BnN25o",
+  },
 ];
 
 export default function ContactPage() {
