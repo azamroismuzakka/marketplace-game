@@ -35,9 +35,12 @@ export default function Navbar() {
           className="flex items-center gap-2 font-bold tracking-tight"
           onClick={() => setOpen(false)}
         >
-          <span className="grid h-9 w-9 place-items-center rounded-xl bg-linear-to-br from-sky-400 to-blue-600 text-sm font-black text-black shadow-lg shadow-sky-500/30">
-            AM
-          </span>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/logo.jpg"
+            alt="Athena Game Market"
+            className="h-9 w-9 rounded-xl object-cover shadow-lg shadow-sky-500/30"
+          />
           <span className="text-lg text-white">
             Athena<span className="text-sky-400">Market</span>
           </span>

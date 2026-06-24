@@ -53,9 +53,12 @@ export default function LoginPage() {
           <div className="pointer-events-none absolute -top-20 left-1/2 h-40 w-40 -translate-x-1/2 rounded-full bg-sky-500/20 blur-3xl" />
 
           <div className="relative text-center">
-            <span className="grid mx-auto h-12 w-12 place-items-center rounded-2xl bg-linear-to-br from-sky-400 to-blue-600 text-lg font-black text-black">
-              AM
-            </span>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/logo.jpg"
+              alt="Athena Game Market"
+              className="mx-auto h-16 w-16 rounded-2xl object-cover"
+            />
             <h1 className="mt-4 text-2xl font-bold text-white">Masuk Admin</h1>
             <p className="mt-1 text-sm text-slate-400">
               Khusus pengelola AthenaMarket

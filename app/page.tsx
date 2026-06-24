@@ -130,19 +130,17 @@ export default async function Home() {
                   className="group relative outline-none"
                 >
                   <div className="pointer-events-none absolute -inset-2 -z-10 rounded-[2.5rem] bg-linear-to-br from-sky-400 to-blue-600 opacity-40 blur-2xl transition-opacity duration-300 group-active:opacity-70" />
-                  <div className="grid h-40 w-40 place-items-center rounded-[2.5rem] bg-linear-to-br from-sky-400 to-blue-600 text-6xl font-black text-black shadow-2xl shadow-sky-500/40 transition-transform duration-200 group-active:scale-95 sm:h-52 sm:w-52 sm:text-7xl">
-                    AM
-                  </div>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src="/logo.jpg"
+                    alt="Athena Game Market"
+                    className="h-48 w-48 rounded-[2.5rem] object-cover shadow-2xl shadow-sky-500/40 transition-transform duration-200 group-active:scale-95 sm:h-60 sm:w-60"
+                  />
                 </button>
-                {/* Wordmark */}
-                <div className="text-center">
-                  <p className="text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
-                    Athena<span className="text-sky-400">Market</span>
-                  </p>
-                  <p className="mt-2 text-sm text-slate-400">
-                    Marketplace Akun Game Terpercaya
-                  </p>
-                </div>
+                {/* Tagline */}
+                <p className="max-w-xs text-center text-sm text-slate-400">
+                  Marketplace Akun Game Terpercaya
+                </p>
               </div>
             </div>
           </div>
