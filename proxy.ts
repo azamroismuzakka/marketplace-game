@@ -8,10 +8,11 @@ import { jwtVerify } from "jose";
 const PROTECTED = ["/admin"];
 const AUTH_PAGES = ["/login"];
 
-const encodedKey = new TextEncoder().encode(process.env.SESSION_SECRET);
-
 async function hasValidSession(token: string | undefined): Promise<boolean> {
   if (!token) return false;
+  const secret = process.env.SESSION_SECRET;
+  if (!secret) return false;
+  const encodedKey = new TextEncoder().encode(secret);
   try {
     const { payload } = await jwtVerify(token, encodedKey, {
       algorithms: ["HS256"],

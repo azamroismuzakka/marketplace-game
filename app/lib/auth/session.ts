@@ -10,18 +10,23 @@ export type SessionPayload = {
 const COOKIE_NAME = "session";
 const MAX_AGE_SECONDS = 60 * 60 * 24 * 7; // 7 hari
 
-const secretKey = process.env.SESSION_SECRET;
-if (!secretKey) {
-  throw new Error("SESSION_SECRET belum diset di environment (.env).");
+// Dibaca secara lazy (bukan saat modul di-load) supaya `next build` tidak gagal
+// ketika SESSION_SECRET belum tersedia di lingkungan build. Error hanya muncul
+// saat fungsi auth benar-benar dipanggil (runtime).
+function getEncodedKey(): Uint8Array {
+  const secretKey = process.env.SESSION_SECRET;
+  if (!secretKey) {
+    throw new Error("SESSION_SECRET belum diset di environment (.env).");
+  }
+  return new TextEncoder().encode(secretKey);
 }
-const encodedKey = new TextEncoder().encode(secretKey);
 
 export async function encrypt(payload: SessionPayload): Promise<string> {
   return new SignJWT(payload)
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
     .setExpirationTime("7d")
-    .sign(encodedKey);
+    .sign(getEncodedKey());
 }
 
 export async function decrypt(
@@ -29,7 +34,7 @@ export async function decrypt(
 ): Promise<SessionPayload | null> {
   if (!token) return null;
   try {
-    const { payload } = await jwtVerify(token, encodedKey, {
+    const { payload } = await jwtVerify(token, getEncodedKey(), {
       algorithms: ["HS256"],
     });
     if (!payload.userId) return null;
