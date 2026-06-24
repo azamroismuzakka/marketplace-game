@@ -31,15 +31,6 @@ export default function AccountCard({ account }: { account: ListingCard }) {
         {account.description}
       </p>
 
-      <div className="mt-3 flex flex-wrap gap-2">
-        <span className="rounded-full bg-white/5 px-2.5 py-1 text-[11px] text-slate-300">
-          {account.rank}
-        </span>
-        <span className="rounded-full bg-white/5 px-2.5 py-1 text-[11px] text-slate-300">
-          {account.skins} Skin
-        </span>
-      </div>
-
       <div className="mt-auto flex items-center justify-between pt-5">
         <div>
           <p className="text-[11px] text-slate-500">Harga</p>
