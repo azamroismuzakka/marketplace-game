@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/app/lib/prisma";
 import { getCurrentUser } from "@/app/lib/auth/dal";
-import { saveImage } from "@/app/lib/storage";
+import { saveImage, useSupabaseStorage } from "@/app/lib/storage";
 
 const ALLOWED_TYPES = ["image/png", "image/jpeg", "image/webp", "image/gif"];
 const MAX_BYTES = 5 * 1024 * 1024; // 5MB
@@ -59,9 +59,15 @@ export async function POST(
       ext,
       contentType: file.type,
     }));
-  } catch {
+  } catch (err) {
+    console.error("Upload gambar gagal:", err);
+    const detail = useSupabaseStorage
+      ? err instanceof Error
+        ? err.message
+        : "error tidak diketahui dari Supabase"
+      : "Supabase Storage belum aktif di server ini (SUPABASE_SERVICE_ROLE_KEY belum diset). Tambahkan di Environment Variables Vercel lalu redeploy.";
     return NextResponse.json(
-      { message: "Gagal menyimpan gambar ke storage." },
+      { message: `Gagal menyimpan gambar: ${detail}` },
       { status: 500 },
     );
   }
