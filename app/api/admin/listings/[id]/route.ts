@@ -1,8 +1,7 @@
 import { NextResponse } from "next/server";
-import { unlink } from "node:fs/promises";
-import path from "node:path";
 import { prisma } from "@/app/lib/prisma";
 import { getAdminOrResponse } from "@/app/lib/auth/admin-api";
+import { deleteImage } from "@/app/lib/storage";
 import { fieldErrors } from "@/app/lib/validations/auth";
 import { listingSchema } from "@/app/lib/validations/listing";
 
@@ -92,15 +91,9 @@ export async function DELETE(
     );
   }
 
-  // Hapus file gambar lokal (yang di /uploads).
+  // Hapus file gambar dari storage (Supabase atau lokal).
   for (const img of listing.images) {
-    if (img.url.startsWith("/uploads/")) {
-      try {
-        await unlink(path.join(process.cwd(), "public", img.url));
-      } catch {
-        // abaikan jika file sudah tidak ada
-      }
-    }
+    await deleteImage(img.url);
   }
 
   try {

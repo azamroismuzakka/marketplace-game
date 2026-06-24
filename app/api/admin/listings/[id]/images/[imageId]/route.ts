@@ -1,8 +1,7 @@
 import { NextResponse } from "next/server";
-import { unlink } from "node:fs/promises";
-import path from "node:path";
 import { prisma } from "@/app/lib/prisma";
 import { getCurrentUser } from "@/app/lib/auth/dal";
+import { deleteImage } from "@/app/lib/storage";
 
 export async function DELETE(
   _request: Request,
@@ -27,15 +26,7 @@ export async function DELETE(
     );
   }
 
-  // Hapus file fisik jika tersimpan lokal di /uploads.
-  if (image.url.startsWith("/uploads/")) {
-    try {
-      await unlink(path.join(process.cwd(), "public", image.url));
-    } catch {
-      // file mungkin sudah tidak ada — abaikan
-    }
-  }
-
+  await deleteImage(image.url);
   await prisma.listingImage.delete({ where: { id: imageId } });
   return NextResponse.json({ success: true });
 }
