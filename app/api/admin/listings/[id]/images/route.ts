@@ -81,15 +81,16 @@ export async function POST(
   } catch (err) {
     console.error("Upload gambar gagal:", err);
     const keyDetected = Boolean(process.env.SUPABASE_SERVICE_ROLE_KEY);
+    const supabaseNames = Object.keys(process.env).filter((k) =>
+      k.includes("SUPABASE"),
+    );
     const detail = useSupabaseStorage
       ? err instanceof Error
         ? err.message
         : "error tidak diketahui dari Supabase"
-      : `[diag v2] Storage tidak aktif. SUPABASE_SERVICE_ROLE_KEY terbaca server: ${keyDetected}. ${
-          keyDetected
-            ? "Key terbaca tapi Storage tetap mati — laporkan pesan ini."
-            : "Key TIDAK terbaca — set ulang di Vercel (tanpa tanda Sensitive) lalu redeploy."
-        }`;
+      : `[diag v3] Storage tidak aktif. SERVICE_KEY terbaca: ${keyDetected}. Nama env SUPABASE yang terbaca server: [${
+          supabaseNames.join(" | ") || "KOSONG — tidak ada satupun"
+        }].`;
     return NextResponse.json(
       { message: `Gagal menyimpan gambar: ${detail}` },
       { status: 500 },
