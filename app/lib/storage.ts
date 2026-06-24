@@ -4,7 +4,11 @@ import path from "node:path";
 import { randomUUID } from "node:crypto";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 
-const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
+// Pakai SUPABASE_URL (variabel server biasa, dibaca saat runtime) lebih dulu.
+// NEXT_PUBLIC_SUPABASE_URL ditanam saat build dan bisa jadi `undefined` bila
+// ditandai "Sensitive" di Vercel — makanya jangan diandalkan di server.
+const SUPABASE_URL =
+  process.env.SUPABASE_URL ?? process.env.NEXT_PUBLIC_SUPABASE_URL;
 const SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
 const BUCKET = process.env.SUPABASE_STORAGE_BUCKET ?? "listings";
 
