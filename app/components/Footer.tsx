@@ -64,6 +64,14 @@ export default function Footer() {
               >
                 📷 Instagram
               </a>
+              <a
+                href="https://whatsapp.com/channel/0029VbDHh1v2975326u5NU27"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="rounded-lg border border-emerald-400/30 bg-emerald-400/10 px-3 py-2 text-sm font-medium text-emerald-300 hover:bg-emerald-400/20"
+              >
+                📢 Saluran WA
+              </a>
             </div>
           </div>
 

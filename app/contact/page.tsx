@@ -26,6 +26,12 @@ const channels: {
     value: "@athenamarket.id",
     href: "https://www.instagram.com/athenamarket.id?igsh=aDFxMjhpa3BnN25o",
   },
+  {
+    icon: "📢",
+    label: "Saluran WhatsApp",
+    value: "Ikuti update & akun terbaru",
+    href: "https://whatsapp.com/channel/0029VbDHh1v2975326u5NU27",
+  },
 ];
 
 export default function ContactPage() {

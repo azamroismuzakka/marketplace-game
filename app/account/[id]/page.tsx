@@ -138,6 +138,14 @@ export default async function AccountDetailPage({
                 >
                   📷 Ikuti Instagram Kami
                 </a>
+                <a
+                  href="https://whatsapp.com/channel/0029VbDHh1v2975326u5NU27"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block rounded-xl border border-emerald-400/30 bg-emerald-400/10 px-6 py-3.5 text-center text-sm font-semibold text-emerald-300 hover:bg-emerald-400/20"
+                >
+                  📢 Saluran WhatsApp
+                </a>
               </div>
 
               <ul className="mt-6 space-y-2.5 text-sm text-slate-400">
