@@ -34,8 +34,6 @@ export default async function AccountDetailPage({
 
   const specs = [
     { label: "Game", value: account.game },
-    { label: "Rank", value: account.rank },
-    { label: "Jumlah Skin", value: `${account.skins} Skin` },
     { label: "Status", value: account.status },
   ];
 
