@@ -1,4 +1,5 @@
 import Link from "next/link";
+import GameIcon from "./GameIcon";
 import type { ListingCard } from "../lib/listings";
 
 export default function AccountCard({ account }: { account: ListingCard }) {
@@ -20,8 +21,8 @@ export default function AccountCard({ account }: { account: ListingCard }) {
         </span>
       </div>
 
-      <div className="mt-4 grid h-14 w-14 place-items-center rounded-2xl bg-linear-to-br from-sky-400/15 to-blue-600/15 text-2xl">
-        {account.emoji}
+      <div className="mt-4 grid h-14 w-14 place-items-center overflow-hidden rounded-2xl bg-linear-to-br from-sky-400/15 to-blue-600/15">
+        <GameIcon game={account.game} emoji={account.emoji} />
       </div>
 
       <h3 className="mt-4 font-semibold text-white group-hover:text-sky-300">
