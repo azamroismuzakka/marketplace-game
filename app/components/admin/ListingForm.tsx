@@ -36,6 +36,11 @@ export default function ListingForm({
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+  const [gameId, setGameId] = useState(initial?.gameId ?? "");
+
+  // Free Fire tidak memakai "Jumlah Skin" — sembunyikan untuk game itu.
+  const selectedGame = games.find((g) => g.id === gameId)?.name;
+  const showSkin = selectedGame !== "Free Fire";
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -99,7 +104,8 @@ export default function ListingForm({
           <select
             name="gameId"
             required
-            defaultValue={initial?.gameId ?? ""}
+            value={gameId}
+            onChange={(e) => setGameId(e.target.value)}
             className={inputCls}
           >
             <option value="" disabled>
@@ -142,7 +148,7 @@ export default function ListingForm({
         {err("title")}
       </div>
 
-      <div className="grid gap-5 sm:grid-cols-2">
+      <div className={`grid gap-5 ${showSkin ? "sm:grid-cols-2" : ""}`}>
         <div>
           <label className={labelCls}>Harga (Rp)</label>
           <input
@@ -156,16 +162,18 @@ export default function ListingForm({
           />
           {err("price")}
         </div>
-        <div>
-          <label className={labelCls}>Jumlah Skin</label>
-          <input
-            name="skinCount"
-            type="number"
-            min={0}
-            defaultValue={initial?.skinCount ?? 0}
-            className={inputCls}
-          />
-        </div>
+        {showSkin && (
+          <div>
+            <label className={labelCls}>Jumlah Skin</label>
+            <input
+              name="skinCount"
+              type="number"
+              min={0}
+              defaultValue={initial?.skinCount ?? 0}
+              className={inputCls}
+            />
+          </div>
+        )}
       </div>
 
       <div>
