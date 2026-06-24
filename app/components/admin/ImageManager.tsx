@@ -1,8 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 type Img = { id: string; url: string };
+
+const ALLOWED = ["image/png", "image/jpeg", "image/webp", "image/gif"];
+const MAX_BYTES = 5 * 1024 * 1024; // 5MB
 
 export default function ImageManager({
   listingId,
@@ -14,27 +17,36 @@ export default function ImageManager({
   const [images, setImages] = useState<Img[]>(initialImages);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [dragOver, setDragOver] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
 
-  async function handleUpload(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0];
-    e.target.value = ""; // reset agar file sama bisa diupload lagi
-    if (!file) return;
-
+  async function uploadFiles(files: File[]) {
+    if (files.length === 0) return;
     setError(null);
     setUploading(true);
     try {
-      const fd = new FormData();
-      fd.append("file", file);
-      const res = await fetch(`/api/admin/listings/${listingId}/images`, {
-        method: "POST",
-        body: fd,
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        setError(data.message ?? "Gagal mengunggah.");
-        return;
+      for (const file of files) {
+        if (!ALLOWED.includes(file.type)) {
+          setError(`"${file.name}" — format harus PNG/JPG/WEBP/GIF.`);
+          continue;
+        }
+        if (file.size > MAX_BYTES) {
+          setError(`"${file.name}" — ukuran melebihi 5MB.`);
+          continue;
+        }
+        const fd = new FormData();
+        fd.append("file", file);
+        const res = await fetch(`/api/admin/listings/${listingId}/images`, {
+          method: "POST",
+          body: fd,
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          setError(data.message ?? "Gagal mengunggah.");
+          continue;
+        }
+        setImages((prev) => [...prev, data.image]);
       }
-      setImages((prev) => [...prev, data.image]);
     } catch {
       setError("Terjadi kesalahan jaringan.");
     } finally {
@@ -59,24 +71,59 @@ export default function ImageManager({
 
   return (
     <div className="space-y-5">
-      <div className="flex flex-wrap items-center gap-3">
-        <label
-          className={`inline-flex cursor-pointer items-center gap-2 rounded-xl bg-linear-to-r from-sky-400 to-blue-600 px-5 py-2.5 text-sm font-semibold text-black transition-opacity ${
-            uploading ? "opacity-60" : "hover:opacity-90"
-          }`}
-        >
-          <input
-            type="file"
-            accept="image/png,image/jpeg,image/webp,image/gif"
-            onChange={handleUpload}
-            disabled={uploading}
-            className="hidden"
-          />
-          {uploading ? "Mengunggah…" : "+ Upload Screenshot"}
-        </label>
-        <span className="text-xs text-slate-500">
-          PNG/JPG/WEBP/GIF, maksimal 5MB.
-        </span>
+      {/* Drop zone */}
+      <div
+        role="button"
+        tabIndex={0}
+        onClick={() => !uploading && inputRef.current?.click()}
+        onKeyDown={(e) => {
+          if ((e.key === "Enter" || e.key === " ") && !uploading) {
+            inputRef.current?.click();
+          }
+        }}
+        onDragEnter={(e) => {
+          e.preventDefault();
+          setDragOver(true);
+        }}
+        onDragOver={(e) => {
+          e.preventDefault();
+          setDragOver(true);
+        }}
+        onDragLeave={(e) => {
+          e.preventDefault();
+          setDragOver(false);
+        }}
+        onDrop={(e) => {
+          e.preventDefault();
+          setDragOver(false);
+          if (!uploading) uploadFiles(Array.from(e.dataTransfer.files));
+        }}
+        className={`cursor-pointer rounded-2xl border-2 border-dashed p-8 text-center transition-colors ${
+          dragOver
+            ? "border-sky-400 bg-sky-400/10"
+            : "border-white/15 bg-white/3 hover:border-white/30"
+        } ${uploading ? "pointer-events-none opacity-70" : ""}`}
+      >
+        <input
+          ref={inputRef}
+          type="file"
+          accept="image/png,image/jpeg,image/webp,image/gif"
+          multiple
+          className="hidden"
+          onChange={(e) => {
+            uploadFiles(Array.from(e.target.files ?? []));
+            e.target.value = "";
+          }}
+        />
+        <p className="text-3xl">{uploading ? "⏳" : "📤"}</p>
+        <p className="mt-2 text-sm font-semibold text-white">
+          {uploading
+            ? "Mengunggah…"
+            : "Seret & lepas gambar ke sini, atau klik untuk pilih"}
+        </p>
+        <p className="mt-1 text-xs text-slate-500">
+          PNG / JPG / WEBP / GIF · maks 5MB · bisa beberapa file sekaligus
+        </p>
       </div>
 
       {error && (
@@ -85,12 +132,7 @@ export default function ImageManager({
         </p>
       )}
 
-      {images.length === 0 ? (
-        <div className="rounded-2xl border border-dashed border-white/15 bg-white/3 p-10 text-center text-sm text-slate-400">
-          Belum ada gambar. Unggah screenshot agar pembeli bisa melihat
-          spesifikasi akun.
-        </div>
-      ) : (
+      {images.length > 0 && (
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
           {images.map((img) => (
             <div
