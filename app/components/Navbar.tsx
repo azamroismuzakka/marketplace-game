@@ -82,14 +82,7 @@ export default function Navbar() {
                 Keluar
               </button>
             </>
-          ) : (
-            <Link
-              href="/login"
-              className="rounded-lg border border-white/10 px-4 py-2 text-sm font-semibold text-slate-200 hover:bg-white/5 hover:text-white"
-            >
-              Masuk Admin
-            </Link>
-          )}
+          ) : null}
         </div>
 
         {/* Mobile toggle */}
@@ -157,17 +150,7 @@ export default function Navbar() {
                 Keluar
               </button>
             </div>
-          ) : (
-            <div className="pt-3">
-              <Link
-                href="/login"
-                onClick={() => setOpen(false)}
-                className="block rounded-lg border border-white/10 px-4 py-2.5 text-center text-sm font-semibold text-slate-100"
-              >
-                Masuk Admin
-              </Link>
-            </div>
-          )}
+          ) : null}
         </div>
       </div>
     </header>
