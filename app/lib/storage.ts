@@ -70,6 +70,25 @@ export async function saveImage(opts: {
         upsert: false,
       });
     if (error) throw error;
+
+    // Jaring pengaman: unduh kembali & pastikan byte-nya identik. Bila runtime
+    // sempat merusak data saat upload, file ditolak di sini (objek dihapus lagi)
+    // daripada diam-diam tersimpan rusak dan baru ketahuan sebagai gambar hitam.
+    const { data: stored, error: dlErr } = await supabase.storage
+      .from(BUCKET)
+      .download(objectPath);
+    if (dlErr) throw dlErr;
+    const back = Buffer.from(await stored.arrayBuffer());
+    if (back.length !== opts.bytes.length || !back.equals(opts.bytes)) {
+      await supabase.storage
+        .from(BUCKET)
+        .remove([objectPath])
+        .catch(() => {});
+      throw new Error(
+        `Gambar rusak saat diunggah (data tidak utuh: ${back.length}/${opts.bytes.length} byte). Silakan coba lagi.`,
+      );
+    }
+
     const { data } = supabase.storage.from(BUCKET).getPublicUrl(objectPath);
     return { url: data.publicUrl };
   }
