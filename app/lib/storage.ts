@@ -34,6 +34,9 @@ async function ensureBucket(supabase: SupabaseClient) {
   if (bucketReady) return;
   // Buat bucket publik bila belum ada (abaikan error "sudah ada").
   await supabase.storage.createBucket(BUCKET, { public: true }).catch(() => {});
+  // Pastikan publik walau bucket sudah ada sebelumnya (mis. dibuat private).
+  // Tanpa ini, getPublicUrl menghasilkan URL yang tidak bisa diakses (broken).
+  await supabase.storage.updateBucket(BUCKET, { public: true }).catch(() => {});
   bucketReady = true;
 }
 
@@ -52,9 +55,17 @@ export async function saveImage(opts: {
     const supabase = getClient();
     await ensureBucket(supabase);
     const objectPath = `${opts.listingId}/${filename}`;
+    // Bungkus buffer sebagai Blob agar data biner TIDAK pernah lewat jalur teks.
+    // Di sebagian runtime (mis. Node/undici di Vercel), Buffer mentah bisa
+    // ter-encode sebagai UTF-8 saat upload — header RIFF/WebP (byte ASCII) selamat
+    // tapi payload (byte ≥0x80) membengkak & rusak, hasilnya file WebP korup
+    // yang gagal di-render (tampil sebagai gambar hitam/rusak).
+    const body = new Blob([new Uint8Array(opts.bytes)], {
+      type: opts.contentType,
+    });
     const { error } = await supabase.storage
       .from(BUCKET)
-      .upload(objectPath, opts.bytes, {
+      .upload(objectPath, body, {
         contentType: opts.contentType,
         upsert: false,
       });
